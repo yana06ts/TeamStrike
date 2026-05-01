@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviourPunCallbacks
 {
     public bool IsMenuOpened = false;
     public GameObject menuUI;
@@ -35,16 +35,13 @@ public class GameManager : MonoBehaviour
     {
         PlayerPrefs.SetFloat("Sensitivity", value);
         PlayerManager pm = FindObjectOfType<PlayerManager>();
-        Debug.Log("PlayerManager found: " + pm);
         if (pm != null)
         {
             CameraManager cam = pm.GetComponentInChildren<CameraManager>();
-            Debug.Log("CameraManager found: " + cam);
             if (cam != null)
             {
                 cam.camLookSpeed = value;
                 cam.camPivotSpeed = value;
-                Debug.Log("Sensitivity set to: " + value);
             }
         }
     }
@@ -116,6 +113,16 @@ public class GameManager : MonoBehaviour
             Cursor.visible = false;
             IsMenuOpened = false;
             AudioListener.volume = soundToggle.isOn ? 1f : 0f;
+        }
+    }
+
+    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
+    {
+        // Если вышел именно MasterClient во время игры
+        if (otherPlayer.IsMasterClient && !IsGameEnded)
+        {
+            Debug.Log("[GameManager] MasterClient left — ending game for all.");
+            EndGame();
         }
     }
 

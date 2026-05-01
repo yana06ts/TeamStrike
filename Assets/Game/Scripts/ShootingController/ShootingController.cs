@@ -130,8 +130,6 @@ public class ShootingController : MonoBehaviour
             RaycastHit hit;
             if(Physics.Raycast(firePoint.position, firePoint.forward, out hit, fireRange))
             {
-                Debug.Log(hit.transform.name);
-
                 Vector3 hitPoint = hit.point;
                 Vector3 hitNormal = hit.normal;
                 PlayerMovement playermovementDamage = hit.collider.GetComponent<PlayerMovement>();

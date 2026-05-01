@@ -33,11 +33,12 @@ public class PlayerControllerManager : MonoBehaviourPunCallbacks
 
     void CreateController()
     {
-        if(PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey("Team"))
+        if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey("Team"))
         {
             playerTeam = (int)PhotonNetwork.LocalPlayer.CustomProperties["Team"];
+            Debug.Log("[PCM] Player: " + PhotonNetwork.NickName
+                + " | Team: " + playerTeam);
         }
-
         AssignPlayerToSpawnArea(playerTeam);
     }
 
@@ -65,6 +66,8 @@ public class PlayerControllerManager : MonoBehaviourPunCallbacks
 
         if(spawnPoint != null)
         {
+            Debug.Log("[PCM] Spawning player at: " + spawnPoint.position
+           + " | Team: " + team);
             controller = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Player"), spawnPoint.position, spawnPoint.rotation, 0, new object[] {view.ViewID});
         }
         else
@@ -90,6 +93,8 @@ public class PlayerControllerManager : MonoBehaviourPunCallbacks
 
     public void Die()
     {
+        Debug.Log("[PCM] Player died: " + PhotonNetwork.NickName
+       + " | Respawning...");
         PhotonNetwork.Destroy(controller);
         CreateController();
     }

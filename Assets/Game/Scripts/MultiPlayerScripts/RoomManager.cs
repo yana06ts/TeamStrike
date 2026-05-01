@@ -34,6 +34,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public override void OnDisconnected(DisconnectCause cause)
     {
+        Debug.Log("[RoomManager] Disconnected: " + cause);
         if (PlayerPrefs.GetInt("ShowTitleMenu", 0) == 1)
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(0);
@@ -44,12 +45,20 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if(scene.buildIndex == 1)
         {
+            Debug.Log("[RoomManager] Game scene loaded. Instantiating PlayerControllerManager...");
             PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerControllerManager"), Vector3.zero, Quaternion.identity);
         }
 
         if (scene.buildIndex == 0)
         {
+            Debug.Log("[RoomManager] Menu scene loaded. Destroying RoomManager.");
             Destroy(gameObject);
         }
+    }
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        Debug.Log("[RoomManager] MasterClient left. New master: "
+            + newMasterClient.NickName);
     }
 }

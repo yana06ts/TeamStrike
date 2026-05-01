@@ -10,6 +10,7 @@ public class SettingsManager : MonoBehaviour
     public Dropdown resolutionDropdown;
 
     private Resolution[] resolutions;
+    public Toggle fullscreenToggle;
 
     void Start()
     {
@@ -40,6 +41,7 @@ public class SettingsManager : MonoBehaviour
         resolutionDropdown.AddOptions(options);
         resolutionDropdown.value = currentResIndex;
         resolutionDropdown.RefreshShownValue();
+        fullscreenToggle.isOn = Screen.fullScreen;
     }
 
     public void SetVolume(float value)
@@ -53,5 +55,13 @@ public class SettingsManager : MonoBehaviour
     {
         Resolution res = resolutions[index];
         Screen.SetResolution(res.width, res.height, Screen.fullScreen);
+    }
+
+    public void SetFullscreen(bool isFullscreen)
+    {
+        Screen.fullScreen = isFullscreen;
+        Screen.fullScreenMode = isFullscreen
+            ? FullScreenMode.FullScreenWindow
+            : FullScreenMode.Windowed;
     }
 }

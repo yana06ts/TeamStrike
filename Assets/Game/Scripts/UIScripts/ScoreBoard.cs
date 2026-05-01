@@ -33,6 +33,8 @@ public class ScoreBoard : MonoBehaviour
         {
             redTeamScore++;
         }
+        Debug.Log("[ScoreBoard] Kill registered | Blue: "
+       + blueTeamScore + " | Red: " + redTeamScore);
 
         view.RPC("UpdateScores", RpcTarget.All, blueTeamScore, redTeamScore);
     }

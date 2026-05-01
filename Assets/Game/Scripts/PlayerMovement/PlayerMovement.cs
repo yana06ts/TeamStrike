@@ -230,18 +230,18 @@ public class PlayerMovement : MonoBehaviour
     [PunRPC]
     void RPC_TakeDamage(float damage)
     {
-        if(!view.IsMine)
-            return;
+        if (!view.IsMine) return;
 
         currentHealth -= damage;
         healthbarSlider.value = currentHealth;
-        if(currentHealth <= 0)
+        Debug.Log("[PlayerMovement] " + PhotonNetwork.NickName
+            + " took " + damage + " dmg | HP: " + currentHealth);
+
+        if (currentHealth <= 0)
         {
+            Debug.Log("[PlayerMovement] " + PhotonNetwork.NickName + " died.");
             Die();
         }
-
-        Debug.Log("Damage Taken" + damage);
-        Debug.Log("current Health" + currentHealth);
     }
 
     private void Die()

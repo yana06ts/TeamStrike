@@ -28,25 +28,20 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     void Start()
     {
-        Debug.Log("Connecting to Master...");
+        Debug.Log("[Launcher] Connecting to Master...");
         PhotonNetwork.ConnectUsingSettings();
     }
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log("Connected to Master");
+        Debug.Log("[Launcher] Connected to Master. Joining Lobby...");
         PhotonNetwork.JoinLobby();
         PhotonNetwork.AutomaticallySyncScene = true;
     }
 
-    /*public override void OnJoinedLobby()
-    {
-        MenuManager.instance.OpenMenu("UserNameMenu");
-        Debug.Log("Joined Lobby");
-    }*/
-
     public override void OnJoinedLobby()
     {
+        Debug.Log("[Launcher] Joined Lobby. Player: " + PhotonNetwork.NickName);
         if (PlayerPrefs.GetInt("ShowTitleMenu", 0) == 1)
         {
             PlayerPrefs.DeleteKey("ShowTitleMenu");
@@ -68,12 +63,17 @@ public class Launcher : MonoBehaviourPunCallbacks
             return;
         }
 
+        RoomOptions options = new RoomOptions();
+        options.MaxPlayers = 8;
+
         PhotonNetwork.CreateRoom(roomNameInputField.text);
         MenuManager.instance.OpenMenu("LoadingMenu");
     }
 
     public override void OnJoinedRoom()
     {
+        Debug.Log("[Launcher] Joined Room: " + PhotonNetwork.CurrentRoom.Name
+       + " | Players: " + PhotonNetwork.CurrentRoom.PlayerCount);
         MenuManager.instance.OpenMenu("RoomMenu");
         roomNameText.text = PhotonNetwork.CurrentRoom.Name;
 
@@ -113,6 +113,8 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.CurrentRoom.IsVisible = false;
         PhotonNetwork.LoadLevel(1);
     }
 
